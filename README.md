@@ -124,6 +124,7 @@ O Home Chef combina tecnologias modernas — Flutter, Spring Boot e Firebase —
 
 🧱 Estrutura inicial
 📱 Frontend (Flutter)
+```
  ├─ lib/
  │   ├─ main.dart
  │   ├─ core/          # Configurações globais, tema, constantes
@@ -134,7 +135,9 @@ O Home Chef combina tecnologias modernas — Flutter, Spring Boot e Firebase —
  ├─ pubspec.yaml
  └─ test/
      └─ unit_tests/
+```
 ☕ Backend (Spring Boot)
+```
 homechef-api/
  ├─ src/
  │   ├─ main/java/com/homechef/
@@ -147,3 +150,4 @@ homechef-api/
  │       └─ service/
  ├─ pom.xml
  └─ Jenkinsfile
+ ```
