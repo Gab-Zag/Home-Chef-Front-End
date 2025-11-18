@@ -13,7 +13,16 @@ class RecipeCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        leading: Image.network(recipe.image, width: 60, fit: BoxFit.cover),
+        leading: SizedBox(
+          width: 60,
+          height: 60,
+          child: Image.network(
+            recipe.image,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Icon(Icons.fastfood),
+          ),
+        ),
+
         title: Text(recipe.name),
         subtitle: Text(recipe.category),
         onTap: onTap,

@@ -1,17 +1,18 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:home_chef_front_end/services/api_services.dart';
+import 'package:home_chef_front_end/views/home_page.dart';
 import 'firebase_options.dart';
-import 'views/home_page.dart';
 
-Future<void> main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Hive.initFlutter();
   await Hive.openBox('cacheRecipes');
+
   runApp(const MyApp());
 }
 
@@ -23,8 +24,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Home Chef',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.orange),
-      home: const HomePage(),
+      home: HomePage(api: ApiService()),
     );
   }
 }
+
