@@ -1,19 +1,22 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "nodejs"   
+        git "Git"           
+    }
+
     environment {
-        FLUTTER = "C:/sdk/flutter/bin/flutter"
+        FLUTTER_HOME = "C:/sdk/flutter"
         ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
+        PATH = "${FLUTTER_HOME}/bin;${env.PATH}"
     }
 
     stages {
 
-        stage('Check Flutter') {
+        stage('Prepare Workspace') {
             steps {
-                bat """
-                echo Verificando Flutter...
-                "${FLUTTER}" --version
-                """
+                cleanWs()
             }
         }
 
@@ -23,41 +26,42 @@ pipeline {
             }
         }
 
-        stage('Install Flutter Dependencies') {
+        stage('Check Flutter') {
             steps {
                 bat """
-                "${FLUTTER}" pub get
+                echo ===== FLUTTER VERSION =====
+                flutter --version
+                git --version
                 """
             }
         }
 
-        stage('Static Analysis') {
+        stage('Install Dependencies') {
             steps {
-                bat """
-                "${FLUTTER}" analyze
-                """
+                bat "flutter pub get"
             }
         }
 
-        stage('Unit Tests') {
+        stage('Analyze') {
             steps {
-                bat """
-                "${FLUTTER}" test --coverage
-                """
+                bat "flutter analyze"
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                bat "flutter test --coverage"
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: "build/**/test/*.xml"
-                    archiveArtifacts artifacts: "coverage/**", fingerprint: true
+                    junit allowEmptyResults: true, testResults: "**/test/*.xml"
                 }
             }
         }
 
         stage('Build Web') {
             steps {
-                bat """
-                "${FLUTTER}" build web --release
-                """
+                bat "flutter build web --release"
             }
             post {
                 success {
@@ -68,9 +72,7 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                bat """
-                "${FLUTTER}" build apk --release
-                """
+                bat "flutter build apk --release"
             }
             post {
                 success {
