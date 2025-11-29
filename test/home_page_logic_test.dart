@@ -15,6 +15,8 @@ class FakeApi extends Fake implements ApiService {
         image: "https://via.placeholder.com/150",
         instructions: "Bake",
         category: 'Main Course',
+        ingredients: '',
+        measures: '',
       ),
     ];
   }

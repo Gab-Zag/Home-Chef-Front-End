@@ -32,4 +32,17 @@ class ApiService implements IRecipeApi {
       throw Exception('Erro ao buscar detalhes (${response.statusCode})');
     }
   }
+
+  @override
+  Future<List<Recipe>> getAllRecipes() async {
+    final url = Uri.parse('$baseUrl/all');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((e) => Recipe.fromJson(e)).toList();
+    } else {
+      throw Exception("Erro ao carregar receitas iniciais");
+    }
+  }
 }
