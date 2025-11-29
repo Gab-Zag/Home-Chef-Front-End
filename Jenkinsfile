@@ -2,20 +2,18 @@ pipeline {
     agent any
 
     environment {
-        FLUTTER_HOME = "C:/flutter"
+        FLUTTER_HOME = "C:/sdk/flutter"
         ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
         PATH = "${FLUTTER_HOME}/bin;${ANDROID_HOME}/platform-tools;${ANDROID_HOME}/tools;${env.PATH}"
     }
 
     stages {
 
-        stage('Install Flutter') {
+        stage('Check Flutter') {
             steps {
                 bat """
-                if not exist C:\\flutter (
-                    git clone https://github.com/flutter/flutter.git C:\\flutter
-                )
-                flutter --version
+                echo Verificando Flutter...
+                C:\\sdk\\flutter\\bin\\flutter --version
                 """
             }
         }
@@ -28,19 +26,25 @@ pipeline {
 
         stage('Install Flutter Dependencies') {
             steps {
-                bat "flutter pub get"
+                bat """
+                C:\\sdk\\flutter\\bin\\flutter pub get
+                """
             }
         }
 
         stage('Static Analysis') {
             steps {
-                bat "flutter analyze"
+                bat """
+                C:\\sdk\\flutter\\bin\\flutter analyze
+                """
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat "flutter test --coverage"
+                bat """
+                C:\\sdk\\flutter\\bin\\flutter test --coverage
+                """
             }
             post {
                 always {
@@ -52,7 +56,9 @@ pipeline {
 
         stage('Build Web') {
             steps {
-                bat "flutter build web --release"
+                bat """
+                C:\\sdk\\flutter\\bin\\flutter build web --release
+                """
             }
             post {
                 success {
@@ -63,7 +69,9 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                bat "flutter build apk --release"
+                bat """
+                C:\\sdk\\flutter\\bin\\flutter build apk --release
+                """
             }
             post {
                 success {
