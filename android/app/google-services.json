@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "169599650149",
+    "project_id": "home-chef-c9111",
+    "storage_bucket": "home-chef-c9111.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169599650149:android:bd4c109849d48bfb56f98c",
+        "android_client_info": {
+          "package_name": "com.example.home_chef_front_end"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnM9Ca-UYHbNraNoEvPEONaDBXyySBgNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
