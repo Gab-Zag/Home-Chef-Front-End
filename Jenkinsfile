@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Se o Flutter estiver instalado manualmente:
-        FLUTTER_HOME = "C:\\src\\flutter"
+        FLUTTER_HOME = "C:\\flutter"
 
         PATH = "${FLUTTER_HOME}\\bin;${env.PATH}"
     }
