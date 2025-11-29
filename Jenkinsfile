@@ -2,11 +2,8 @@ pipeline {
     agent any
 
     environment {
-        FLUTTER_HOME = "C:/sdk/flutter"
+        FLUTTER = "C:/sdk/flutter/bin/flutter"
         ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
-        GIT_HOME = "C:/Program Files/Git"
-
-        PATH = "${FLUTTER_HOME}/bin;${ANDROID_HOME}/platform-tools;${ANDROID_HOME}/tools;${GIT_HOME}/cmd;${GIT_HOME}/bin;${env.PATH}"
     }
 
     stages {
@@ -15,7 +12,7 @@ pipeline {
             steps {
                 bat """
                 echo Verificando Flutter...
-                flutter --version
+                "${FLUTTER}" --version
                 """
             }
         }
@@ -28,19 +25,25 @@ pipeline {
 
         stage('Install Flutter Dependencies') {
             steps {
-                bat "flutter pub get"
+                bat """
+                "${FLUTTER}" pub get
+                """
             }
         }
 
         stage('Static Analysis') {
             steps {
-                bat "flutter analyze"
+                bat """
+                "${FLUTTER}" analyze
+                """
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat "flutter test --coverage"
+                bat """
+                "${FLUTTER}" test --coverage
+                """
             }
             post {
                 always {
@@ -52,7 +55,9 @@ pipeline {
 
         stage('Build Web') {
             steps {
-                bat "flutter build web --release"
+                bat """
+                "${FLUTTER}" build web --release
+                """
             }
             post {
                 success {
@@ -63,7 +68,9 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                bat "flutter build apk --release"
+                bat """
+                "${FLUTTER}" build apk --release
+                """
             }
             post {
                 success {
