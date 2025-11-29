@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recipe.dart';
 import '../services/api_services.dart';
-import '../widgets/recipe_card.dart';
-import 'recipe_details.dart';
 
 class HomePage extends StatefulWidget {
   final ApiService api;
