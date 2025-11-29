@@ -2,13 +2,20 @@ pipeline {
     agent any
 
     environment {
-        // Se o Flutter estiver instalado manualmente:
-        FLUTTER_HOME = "C:\\flutter"
-
-        PATH = "${FLUTTER_HOME}\\bin;${env.PATH}"
-    }
+    FLUTTER_HOME = "C:\\flutter"
+    ANDROID_SDK_ROOT = "C:\\Android"
+    PATH = "${FLUTTER_HOME}\\bin;${ANDROID_SDK_ROOT}\\cmdline-tools\\latest\\bin;${ANDROID_SDK_ROOT}\\platform-tools;${env.PATH}"
+}
 
     stages {
+
+        stage('Accept Android Licenses'){
+            steps{
+                bat """
+                (for /L %i in (1 1 100) do @echo y ) | flutter doctor --android-licenses
+                """
+            }
+        }
 
         stage('Checkout') {
             steps {
