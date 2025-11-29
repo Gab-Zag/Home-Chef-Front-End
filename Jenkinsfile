@@ -2,11 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Se estiver usando Generic Tool Installer:
-        FLUTTER_HOME = tool name: 'flutter'
-
         // Se o Flutter estiver instalado manualmente:
-        // FLUTTER_HOME = "C:\\flutter"
+        FLUTTER_HOME = "C:\\src\\flutter"
 
         PATH = "${FLUTTER_HOME}\\bin;${env.PATH}"
     }
