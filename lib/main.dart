@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Home Chef',
       debugShowCheckedModeBanner: false,
-      home: HomePage(api: ApiService()),
+      home: HomeDashboard(api: ApiService()),
     );
   }
 }

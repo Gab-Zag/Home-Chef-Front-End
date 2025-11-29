@@ -6,6 +6,8 @@ class Recipe {
   final String instructions;
   final String image;
 
+  final List<String> steps;
+
   Recipe({
     required this.id,
     required this.name,
@@ -13,16 +15,28 @@ class Recipe {
     required this.area,
     required this.instructions,
     required this.image,
+    required this.steps,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
+    final rawInstructions = json['instructions'] ?? "";
+
+    final steps = rawInstructions.isEmpty
+        ? <String>[]
+        : rawInstructions
+              .split(RegExp(r'\r?\n'))
+              .map((s) => s.trim())
+              .where((s) => s.isNotEmpty)
+              .toList();
+
     return Recipe(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      category: json['category'] ?? 'Unknown',
-      area: json['area'] ?? 'Unknown',
-      instructions: json['instructions'] ?? 'Sem instruções disponíveis',
-      image: json['image'] ?? '',
+      id: json['id'] ?? "",
+      name: json['name'] ?? "",
+      category: json['category'] ?? "",
+      area: json['area'] ?? "",
+      instructions: rawInstructions,
+      image: json['image'] ?? "",
+      steps: steps,
     );
   }
 }
