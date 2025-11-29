@@ -20,6 +20,12 @@ pipeline {
             }
         }
 
+        stage('Clean NDK') {
+            steps {
+                bat 'if exist C:\\Android\\ndk\\28.2.13676358 rmdir /s /q C:\\Android\\ndk\\28.2.13676358'
+            }
+        }
+
         stage('Accept Android Licenses') {
             steps {
                 bat 'echo y | flutter doctor --android-licenses'
@@ -40,20 +46,26 @@ pipeline {
 
         stage('Run Analyzer') {
             steps {
-                // Não trava o pipeline caso apareçam warnings
                 bat 'flutter analyze || exit /b 0'
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Não trava o pipeline caso algum teste falhe
                 bat 'flutter test --coverage || exit /b 0'
             }
             post {
                 always {
                     archiveArtifacts artifacts: 'coverage/**', fingerprint: true
                 }
+            }
+        }
+
+        stage('Ensure SDK & NDK') {
+            steps {
+                bat '''
+                sdkmanager "platforms;android-36" "build-tools;28.0.3" "ndk;25.2.9519653"
+                '''
             }
         }
 
@@ -93,4 +105,3 @@ pipeline {
         }
     }
 }
-//teste
