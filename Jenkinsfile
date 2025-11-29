@@ -4,7 +4,9 @@ pipeline {
     environment {
         FLUTTER_HOME = "C:/sdk/flutter"
         ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
-        PATH = "${FLUTTER_HOME}/bin;${ANDROID_HOME}/platform-tools;${ANDROID_HOME}/tools;${env.PATH}"
+        GIT_HOME = "C:/Program Files/Git"
+
+        PATH = "${FLUTTER_HOME}/bin;${ANDROID_HOME}/platform-tools;${ANDROID_HOME}/tools;${GIT_HOME}/cmd;${GIT_HOME}/bin;${env.PATH}"
     }
 
     stages {
@@ -13,7 +15,7 @@ pipeline {
             steps {
                 bat """
                 echo Verificando Flutter...
-                C:\\sdk\\flutter\\bin\\flutter --version
+                flutter --version
                 """
             }
         }
@@ -26,25 +28,19 @@ pipeline {
 
         stage('Install Flutter Dependencies') {
             steps {
-                bat """
-                C:\\sdk\\flutter\\bin\\flutter pub get
-                """
+                bat "flutter pub get"
             }
         }
 
         stage('Static Analysis') {
             steps {
-                bat """
-                C:\\sdk\\flutter\\bin\\flutter analyze
-                """
+                bat "flutter analyze"
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat """
-                C:\\sdk\\flutter\\bin\\flutter test --coverage
-                """
+                bat "flutter test --coverage"
             }
             post {
                 always {
@@ -56,9 +52,7 @@ pipeline {
 
         stage('Build Web') {
             steps {
-                bat """
-                C:\\sdk\\flutter\\bin\\flutter build web --release
-                """
+                bat "flutter build web --release"
             }
             post {
                 success {
@@ -69,9 +63,7 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                bat """
-                C:\\sdk\\flutter\\bin\\flutter build apk --release
-                """
+                bat "flutter build apk --release"
             }
             post {
                 success {
@@ -79,6 +71,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
