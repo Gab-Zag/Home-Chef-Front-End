@@ -2,20 +2,12 @@ pipeline {
     agent any
 
     environment {
-    FLUTTER_HOME = "C:\\flutter"
-    ANDROID_SDK_ROOT = "C:\\Android"
-    PATH = "${FLUTTER_HOME}\\bin;${ANDROID_SDK_ROOT}\\cmdline-tools\\latest\\bin;${ANDROID_SDK_ROOT}\\platform-tools;${env.PATH}"
-}
+        FLUTTER_HOME = "C:\\flutter"
+        ANDROID_SDK_ROOT = "C:\\Android"
+        PATH = "${FLUTTER_HOME}\\bin;${ANDROID_SDK_ROOT}\\cmdline-tools\\latest\\bin;${ANDROID_SDK_ROOT}\\platform-tools;${env.PATH}"
+    }
 
     stages {
-
-        stage('Accept Android Licenses'){
-            steps{
-                bat """
-                (for /L %i in (1 1 100) do @echo y ) | flutter doctor --android-licenses
-                """
-            }
-        }
 
         stage('Checkout') {
             steps {
@@ -32,7 +24,7 @@ pipeline {
         stage('Accept Android Licenses') {
             steps {
                 // Gera 100 "Y" e aceita todas as licenças
-                bat '(for /l %%i in (1,1,100) do @echo y) | flutter doctor --android-licenses'
+                bat '(for /L %i in (1 1 100) do @echo y) | flutter doctor --android-licenses'
             }
         }
 
