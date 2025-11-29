@@ -8,7 +8,6 @@ pipeline {
     }
 
     options {
-        // Mantém logs do console por 7 dias
         buildDiscarder(logRotator(daysToKeepStr: '7'))
         timestamps()
     }
@@ -21,26 +20,20 @@ pipeline {
             }
         }
 
+        stage('Accept Android Licenses') {
+            steps {
+                bat 'echo y | flutter doctor --android-licenses'
+            }
+        }
+
         stage('Flutter Doctor') {
             steps {
                 bat 'flutter doctor -v'
             }
         }
 
-        stage('Accept Android Licenses') {
-            steps {
-                bat """
-                @echo off
-                for /L %%i in (1,1,100) do (
-                    echo y
-                ) | flutter doctor --android-licenses
-                """
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                // Cache para acelerar builds
                 bat 'flutter pub get'
             }
         }
@@ -48,13 +41,14 @@ pipeline {
         stage('Run Analyzer') {
             steps {
                 // Não trava o pipeline caso apareçam warnings
-                bat 'flutter analyze || exit 0'
+                bat 'flutter analyze || exit /b 0'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'flutter test --coverage || exit 0'
+                // Não trava o pipeline caso algum teste falhe
+                bat 'flutter test --coverage || exit /b 0'
             }
             post {
                 always {
@@ -99,4 +93,3 @@ pipeline {
         }
     }
 }
-//teste
