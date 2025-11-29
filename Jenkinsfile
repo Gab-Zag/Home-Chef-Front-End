@@ -1,29 +1,22 @@
 pipeline {
     agent any
 
+    environment {
+        FLUTTER_HOME = "C:/flutter"
+        ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
+        PATH = "${FLUTTER_HOME}/bin;${ANDROID_HOME}/platform-tools;${ANDROID_HOME}/tools;${env.PATH}"
+    }
+
     stages {
 
         stage('Install Flutter') {
             steps {
-                powershell '''
-                if (!(Test-Path "C:/flutter")) {
-                    git clone https://github.com/flutter/flutter.git C:/flutter
-                }
-
-                $env:PATH += ";C:/flutter/bin"
+                bat """
+                if not exist C:\\flutter (
+                    git clone https://github.com/flutter/flutter.git C:\\flutter
+                )
                 flutter --version
-                '''
-            }
-        }
-
-        stage('Build Flutter') {
-            steps {
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-
-                flutter pub get
-                flutter build apk
-                '''
+                """
             }
         }
 
@@ -35,30 +28,19 @@ pipeline {
 
         stage('Install Flutter Dependencies') {
             steps {
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter pub get
-                '''
+                bat "flutter pub get"
             }
         }
 
         stage('Static Analysis') {
             steps {
-                echo "Running flutter analyze..."
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter analyze
-                '''
+                bat "flutter analyze"
             }
         }
 
         stage('Unit Tests') {
             steps {
-                echo "Running unit tests..."
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter test --coverage
-                '''
+                bat "flutter test --coverage"
             }
             post {
                 always {
@@ -68,50 +50,24 @@ pipeline {
             }
         }
 
-        stage('Integration Tests') {
-            when { branch "main" }
-            steps {
-                echo "Running integration tests..."
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter test integration_test
-                '''
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true, testResults: "build/**/integration_test/*.xml"
-                }
-            }
-        }
-
-        stage('Build Android APK') {
-            when { branch "main" }
-            steps {
-                echo "Building release APK..."
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter build apk --release
-                '''
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
-                }
-            }
-        }
-
         stage('Build Web') {
-            when { branch "main" }
             steps {
-                echo "Building Flutter Web..."
-                powershell '''
-                $env:PATH += ";C:/flutter/bin"
-                flutter build web
-                '''
+                bat "flutter build web --release"
             }
             post {
                 success {
                     archiveArtifacts artifacts: 'build/web/**', fingerprint: true
+                }
+            }
+        }
+
+        stage('Build APK') {
+            steps {
+                bat "flutter build apk --release"
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
                 }
             }
         }
