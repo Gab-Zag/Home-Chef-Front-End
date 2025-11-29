@@ -1,24 +1,17 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "nodejs"   
-        git "Git"           
-    }
-
     environment {
-        FLUTTER_HOME = "C:/sdk/flutter"
-        ANDROID_HOME = "C:/Users/Gabriel/AppData/Local/Android/Sdk"
-        PATH = "${FLUTTER_HOME}/bin;${env.PATH}"
+        // Se estiver usando Generic Tool Installer:
+        FLUTTER_HOME = tool name: 'flutter'
+
+        // Se o Flutter estiver instalado manualmente:
+        // FLUTTER_HOME = "C:\\flutter"
+
+        PATH = "${FLUTTER_HOME}\\bin;${env.PATH}"
     }
 
     stages {
-
-        stage('Prepare Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
 
         stage('Checkout') {
             steps {
@@ -26,59 +19,63 @@ pipeline {
             }
         }
 
-        stage('Check Flutter') {
+        stage('Flutter Doctor') {
             steps {
-                bat """
-                echo ===== FLUTTER VERSION =====
-                flutter --version
-                git --version
-                """
+                bat 'flutter doctor -v'
+            }
+        }
+
+        stage('Accept Android Licenses') {
+            steps {
+                // Gera 100 "Y" e aceita todas as licenças
+                bat '(for /l %%i in (1,1,100) do @echo y) | flutter doctor --android-licenses'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat "flutter pub get"
+                bat 'flutter pub get'
             }
         }
 
-        stage('Analyze') {
+        stage('Run Analyzer') {
             steps {
-                bat "flutter analyze"
+                bat 'flutter analyze'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat "flutter test --coverage"
+                bat 'flutter test --coverage'
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: "**/test/*.xml"
-                }
-            }
-        }
-
-        stage('Build Web') {
-            steps {
-                bat "flutter build web --release"
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'build/web/**', fingerprint: true
+                    archiveArtifacts artifacts: 'coverage/**', fingerprint: true
                 }
             }
         }
 
         stage('Build APK') {
             steps {
-                bat "flutter build apk --release"
+                bat 'flutter build apk --release'
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+                    archiveArtifacts artifacts: 'build\\app\\outputs\\flutter-apk\\app-release.apk', fingerprint: true
                 }
             }
         }
+
+        stage('Build AppBundle') {
+            steps {
+                bat 'flutter build appbundle --release'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'build\\app\\outputs\\bundle\\release\\app-release.aab', fingerprint: true
+                }
+            }
+        }
+
     }
 }
