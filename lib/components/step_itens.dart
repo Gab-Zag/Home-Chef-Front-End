@@ -14,7 +14,6 @@ class StepItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bolinha do passo
           Container(
             width: 28,
             height: 28,
@@ -34,8 +33,7 @@ class StepItem extends StatelessWidget {
           ),
 
           const SizedBox(width: 12),
-
-          // Texto do passo
+          
           Expanded(
             child: Text(
               text,
