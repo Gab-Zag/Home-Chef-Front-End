@@ -5,7 +5,7 @@ import '../models/recipe.dart';
 import 'i_recipe_api.dart';
 
 class ApiService implements IRecipeApi {
-  static const String baseUrl = 'http://localhost:9090/recipes';
+  static const String baseUrl = 'https://mozell-nonexaggerative-conjugably.ngrok-free.dev/recipes/all';
 
   @override
   Future<List<Recipe>> searchRecipes(String ingredients) async {
