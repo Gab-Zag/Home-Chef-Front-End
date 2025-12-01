@@ -5,7 +5,7 @@ import '../models/recipe.dart';
 import 'i_recipe_api.dart';
 
 class ApiService implements IRecipeApi {
-  static const String baseUrl = 'https://mozell-nonexaggerative-conjugably.ngrok-free.dev/recipes/all';
+  static const String baseUrl = 'https://mozell-nonexaggerative-conjugably.ngrok-free.dev/recipes';
 
   @override
   Future<List<Recipe>> searchRecipes(String ingredients) async {
