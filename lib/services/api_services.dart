@@ -5,7 +5,7 @@ import '../models/recipe.dart';
 import 'i_recipe_api.dart';
 
 class ApiService implements IRecipeApi {
-  static const String baseUrl = 'http://localhost:9090/recipes';
+  static const String baseUrl = 'http://192.168.56.1:9090/recipes';
 
   @override
   Future<List<Recipe>> searchRecipes(String ingredients) async {
