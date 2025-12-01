@@ -5,6 +5,12 @@ import 'package:home_chef_front_end/services/api_services.dart';
 import 'package:home_chef_front_end/views/home_page.dart';
 
 class FakeApi extends Fake implements ApiService {
+
+  @override
+  Future<List<Recipe>> getAllRecipes() async {
+    return [];
+  }
+
   @override
   Future<List<Recipe>> searchRecipes(String ingredients) async {
     return [
@@ -15,11 +21,12 @@ class FakeApi extends Fake implements ApiService {
         image: "https://via.placeholder.com/150",
         instructions: "Bake",
         category: 'Main Course',
+        ingredients: '',
+        measures: '',
       ),
     ];
   }
 }
-
 
 void main() {
   testWidgets('HomePage deve buscar receitas e atualizar a UI', (tester) async {
@@ -34,7 +41,11 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.search), warnIfMissed: false);
     await tester.pump();
+
+    await tester.pump(const Duration(milliseconds: 450));
+
     await tester.pumpAndSettle();
+
     expect(find.text("Pizza"), findsOneWidget);
   });
 }
